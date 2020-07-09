@@ -19,14 +19,11 @@ class Items(Resource):
     @jwt_required
     def post(self, name):
         data = Items.parser.parse_args()
-        if len(StoreList.get()['stores']) < data['store_id']:
-            return {'message': 'check your stores'}
-        else:
-            if ItemModel.find_by_name(name):
-                return {'message': 'item "{}" already exists'.format(name)}
-            item = ItemModel(name, **data)
-            item.save_to_db()
-            return item.json()
+        if ItemModel.find_by_name(name):
+            return {'message': 'item "{}" already exists'.format(name)}
+        item = ItemModel(name, **data)
+        item.save_to_db()
+        return item.json()
     
     @jwt_required
     def put(self, name):
