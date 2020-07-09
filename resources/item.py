@@ -9,14 +9,12 @@ class Items(Resource):
     parser.add_argument('price', type=float, required=True)
     parser.add_argument('store_id', type=int, required=True)
 
-    @jwt_required()
     def get(self, name):
         item = ItemModel.find_by_name(name)
         if item:
             return item.json()
         return {'message': 'item "{}" not found'.format(name)}
 
-    @jwt_required()
     def post(self, name):
         data = Items.parser.parse_args()
         if data['store_id'] in (x.id for x in StoreModel.query.all()):
@@ -26,8 +24,7 @@ class Items(Resource):
             item.save_to_db()
             return item.json()
         return {'message': 'check your stores'}
-    
-    @jwt_required()
+
     def put(self, name):
         data = Items.parser.parse_args()
         item = ItemModel.find_by_name(name)
@@ -39,7 +36,6 @@ class Items(Resource):
         item.save_to_db()
         return item.json()
 
-    @jwt_required()
     def delete(self, name):
         item = ItemModel.find_by_name(name)
         item.delete_from_db()
@@ -47,6 +43,5 @@ class Items(Resource):
 
 
 class ItemList(Resource):
-    @jwt_required()
     def get(self):
         return {'items':[x.json() for x in ItemModel.query.all()]}
