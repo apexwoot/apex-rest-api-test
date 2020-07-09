@@ -9,23 +9,23 @@ class Items(Resource):
     parser.add_argument('price', type=float, required=True)
     parser.add_argument('store_id', type=int, required=True)
 
-
     def get(self, name):
         item = ItemModel.find_by_name(name)
         if item:
             return item.json()
         return {'message': 'item "{}" not found'.format(name)}
 
-
     def post(self, name):
         data = Items.parser.parse_args()
-        if ItemModel.find_by_name(name):
-            return {'message': 'item "{}" already exists'.format(name)}
-        item = ItemModel(name, **data)
-        item.save_to_db()
-        return item.json()
+        if len(StoreList.get()['stores']) < data['store_id']:
+            return {'message': 'check your stores'}
+        else:
+            if ItemModel.find_by_name(name):
+                return {'message': 'item "{}" already exists'.format(name)}
+            item = ItemModel(name, **data)
+            item.save_to_db()
+            return item.json()
     
-
     def put(self, name):
         data = Items.parser.parse_args()
         item = ItemModel.find_by_name(name)
@@ -36,7 +36,6 @@ class Items(Resource):
             item = ItemModel(name, **data)
         item.save_to_db()
         return item.json()
-
 
     def delete(self, name):
         item = ItemModel.find_by_name(name)
