@@ -10,7 +10,7 @@ from resources.user import UserRegister
 
 app = Flask(__name__)
 app.secret_key = 'apex'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_KEY','sqlite:///data.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 jwt = JWT(app, authenticate, identity)
